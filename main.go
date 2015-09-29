@@ -25,7 +25,7 @@ var (
 	action         string = "help"
 	port           int    = 8080
 	timeoutMinutes int64  = 10
-	version        string = "0.9"
+	version        string = "0.9.1"
 )
 
 // uploadHandler returns an HTML upload form
@@ -78,6 +78,8 @@ func receiveHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, err)
 	}
 
+	log.Println("File received:", header.Filename)
+
 	fmt.Fprintf(w, `<html>
 File uploaded successfully: %s 
 <p><a href="/">Back</a></p>
@@ -113,8 +115,9 @@ func main() {
 	} else if action == "down" {
 		log.Printf("Allowing downloads from the current directory for %v minutes on port %v\n", timeoutMinutes, port)
 
-		// Show the download page using the standard http FileServer
-		http.Handle("/", http.FileServer(http.Dir(dir)))
+		// Show the download page using a customized FileServer with no
+		// added Upload Header (because we are not allowing uploads)
+		http.Handle("/", FileServer(Dir(dir), false /*addUploadHeader*/))
 
 	} else if action == "up/down" {
 		log.Printf("Allowing downloads from (and uploads to) the current directory for %v minutes on port %v\n", timeoutMinutes, port)
@@ -127,7 +130,7 @@ func main() {
 		// Show the download page using a customized FileServer
 		// copied from net/http/fs.go. This version adds a header
 		// to the top when we list a directory (in dirList() func)
-		http.Handle("/", FileServer(Dir(dir)))
+		http.Handle("/", FileServer(Dir(dir), true /*addUploadHeader*/))
 	}
 
 	go func() {

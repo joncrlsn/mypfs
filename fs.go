@@ -13,6 +13,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"mime"
 	"mime/multipart"
 	"net/http"
@@ -85,10 +86,13 @@ type File interface {
 	Stat() (os.FileInfo, error)
 }
 
-func dirList(w http.ResponseWriter, f File) {
+func dirList(w http.ResponseWriter, f File, addUploadHeader bool) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	// The next line is the only significant change from the Go 1.5 original
-	fmt.Fprintf(w, `<a href="/fs-upload">Upload</a><hr><pre>`)
+	// This is the only significant change from the Go 1.5 original
+	if addUploadHeader {
+		fmt.Fprintf(w, `<a href="/fs-upload">Upload</a><hr>`)
+	}
+	fmt.Fprintf(w, "<pre>")
 	for {
 		dirs, err := f.Readdir(100)
 		if err != nil || len(dirs) == 0 {
@@ -274,6 +278,7 @@ func serveContent(w http.ResponseWriter, r *http.Request, name string, modtime t
 
 	if r.Method != "HEAD" {
 		io.CopyN(w, sendContent, sendSize)
+		log.Println("File sent:", name)
 	}
 }
 
@@ -364,7 +369,7 @@ func checkETag(w http.ResponseWriter, r *http.Request, modtime time.Time) (range
 }
 
 // name is '/'-separated, not filepath.Separator.
-func serveFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name string, redirect bool) {
+func serveFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name string, redirect bool, addUploadHeader bool) {
 	const indexPage = "/index.html"
 
 	// redirect .../index.html to .../
@@ -427,7 +432,7 @@ func serveFile(w http.ResponseWriter, r *http.Request, fs FileSystem, name strin
 		if checkLastModified(w, r, d.ModTime()) {
 			return
 		}
-		dirList(w, f)
+		dirList(w, f, addUploadHeader)
 		return
 	}
 
@@ -471,11 +476,12 @@ func localRedirect(w http.ResponseWriter, r *http.Request, newPath string) {
 // use ServeContent.
 func ServeFile(w http.ResponseWriter, r *http.Request, name string) {
 	dir, file := filepath.Split(name)
-	serveFile(w, r, Dir(dir), file, false)
+	serveFile(w, r, Dir(dir), file, false, false)
 }
 
 type fileHandler struct {
-	root FileSystem
+	root            FileSystem
+	addUploadHeader bool
 }
 
 // FileServer returns a handler that serves HTTP requests
@@ -489,8 +495,8 @@ type fileHandler struct {
 // As a special case, the returned file server redirects any request
 // ending in "/index.html" to the same path, without the final
 // "index.html".
-func FileServer(root FileSystem) http.Handler {
-	return &fileHandler{root}
+func FileServer(root FileSystem, addUploadHeader bool) http.Handler {
+	return &fileHandler{root, addUploadHeader}
 }
 
 func (f *fileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -499,7 +505,7 @@ func (f *fileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		upath = "/" + upath
 		r.URL.Path = upath
 	}
-	serveFile(w, r, f.root, path.Clean(upath), true)
+	serveFile(w, r, f.root, path.Clean(upath), true, f.addUploadHeader)
 }
 
 // httpRange specifies the byte range to be sent to the client.

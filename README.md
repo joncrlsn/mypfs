@@ -1,5 +1,5 @@
 # mypfs
-A "personal fileserver" for sharing files with (and receiving files from) other computers on your network. More specifically, it is a small web server that exposes the files in the current directory and/or allows uploads to the same directory.
+A very easy-to-use "personal fileserver" for sharing files with (and receiving files from) other computers on your network. More specifically, it is a small web server that exposes the files in the current directory and/or allows uploads to the same directory.
 
 ### why?
 * Me: Sarah, can you send me that 100MB zip of those log files?
@@ -32,16 +32,21 @@ A "personal fileserver" for sharing files with (and receiving files from) other 
 1. share URL with person you are sharing with. i.e.  http://\<my-ip-address\>:8080
 
 ### safe use
-1. mypfs will work over the internet only if your computer has a public IP address or you have port-forwarding setup on your router, however direct internet use is discouraged
+1. mypfs will work over the internet only if your computer has a public IP address or you have port-forwarding setup on your router.
 1. run mypfs in a small directory, never the root or home directory
-1. avoid use on a public network (like a coffeeshop or the internet)
+1. avoid use on a public network (like a coffeeshop or the internet) until more security features are added
 1. avoid extending the timeout unless you totally trust your network
 1. shut it down as soon as you've exchanged files
 
-### cool things to improve on
-1. modify FileServer to log when someone downloads a file
+### cool things that could be added
+1. on startup, generate a 10 character token that must be provided by user before download or upload
 1. on the web pages, show time remaining until server shuts down
 1. instead of exiting after timeout, show a "timeout" page
+1. support https (easy with GoLang, just not sure it will be used)
 1. limit uploads to a configurable amount 
 1. after startup, display HTTP URL to copy and share
 1. add parameter with directory to be served  i.e. `mypfs upload /tmp/share`
+
+### version history
+1. 0.9.0 first release
+1. 0.9.1 log to standard out when someone downloads or uploads a file
