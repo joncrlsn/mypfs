@@ -13,10 +13,11 @@ An personal fileserver for quickly sharing files with (and receiving files from)
 * Sarah: Wow, that was sooo easy!
 
 ### features
-1. mypfs provides an HTTP web interface to upload and/or download files to the current directory
+1. mypfs provides an HTTP web interface to upload/download files to/from the current directory
+1. access to the web interface requires a username that is randomly generated during server startup (a password is not needed)
 1. runs on the command-line
 1. during startup you can specify upload, download, or accept the default of both
-1. server will run for 10 minutes by default, then exit -- (this is a security feature which gives enough time to exchange files and protect you if you forget to shut it off)
+1. server will run for 10 minutes (default), then exit -- (this is a security feature which gives enough time to exchange files and yet protect you if you forget to shut it off)
 
 ### examples
 * `mypfs version`
