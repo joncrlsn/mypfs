@@ -29,7 +29,7 @@ A very easy-to-use "personal fileserver" for sharing files with (and receiving f
 1. place executable somewhere in your path
 1. navigate to the directory with files you want to share 
 1. run `mypfs`
-1. share URL with person you are sharing with. i.e.  http://\<my-ip-address\>:8080
+1. share URL and random username with person you need to exchange files with. 
 
 ### safe use
 1. mypfs will work over the internet only if your computer has a public IP address or you have port-forwarding setup on your router.
