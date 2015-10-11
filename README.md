@@ -1,5 +1,5 @@
 # mypfs
-A very easy-to-use "personal fileserver" for sharing files with (and receiving files from) other computers on your network. More specifically, it is a small web server that exposes the files in the current directory and/or allows uploads to the same directory.
+An personal fileserver for quickly sharing files with (and receiving files from) other computers on your network. More specifically, it is a small web server that exposes the files in the current directory and/or allows uploads to the same directory.
 
 ### why?
 * Me: Sarah, can you send me that 100MB zip of those log files?
@@ -8,12 +8,12 @@ A very easy-to-use "personal fileserver" for sharing files with (and receiving f
 * Sarah: OK, do you have a flash drive?
 * Me: No, that's such a pain.
 * (I start mypfs)
-* Me: Here, open your browser to `http://<my-internal-ip-address>:8080` and upload the file
+* Me: Here, open your browser to `http://<my-internal-ip-address>:8080`, enter this username when requested, and upload the file
 * (30 seconds later)
 * Sarah: Wow, that was sooo easy!
 
 ### features
-1. mypfs sports an HTTP web interface to upload and/or download files to the current directory
+1. mypfs provides an HTTP web interface to upload and/or download files to the current directory
 1. runs on the command-line
 1. during startup you can specify upload, download, or accept the default of both
 1. server will run for 10 minutes by default, then exit -- (this is a security feature which gives enough time to exchange files and protect you if you forget to shut it off)
@@ -29,7 +29,7 @@ A very easy-to-use "personal fileserver" for sharing files with (and receiving f
 1. place executable somewhere in your path
 1. navigate to the directory with files you want to share 
 1. run `mypfs`
-1. share URL and random username with person you need to exchange files with. 
+1. share URL and generated username with person you need to exchange files with. 
 
 ### safe use
 1. mypfs will work over the internet only if your computer has a public IP address or you have port-forwarding setup on your router.
@@ -41,7 +41,7 @@ A very easy-to-use "personal fileserver" for sharing files with (and receiving f
 ### version history
 1. 0.9.0 first release
 1. 0.9.1 log to standard out when someone downloads or uploads a file
-1. 0.9.2 a random username is generated -- required to access the site
+1. 0.9.2 a username is generated -- required to access the site (security feature)
 
 ### cool things that could be added
 1. add parameter with directory to be served  i.e. `mypfs upload /tmp/share`
