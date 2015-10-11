@@ -34,19 +34,19 @@ A very easy-to-use "personal fileserver" for sharing files with (and receiving f
 ### safe use
 1. mypfs will work over the internet only if your computer has a public IP address or you have port-forwarding setup on your router.
 1. run mypfs in a small directory, never the root or home directory
-1. avoid use on a public network (like a coffeeshop or the internet) until more security features are added
+1. avoid use on a public network (like a coffeeshop) until more security features are added
 1. avoid extending the timeout unless you totally trust your network
-1. shut it down as soon as you've exchanged files
-
-### cool things that could be added
-1. on startup, generate a 10 character token that must be provided by user before download or upload
-1. on the web pages, show time remaining until server shuts down
-1. instead of exiting after timeout, show a "timeout" page
-1. support https (easy with GoLang, just not sure it will be used)
-1. limit uploads to a configurable amount 
-1. after startup, display HTTP URL to copy and share
-1. add parameter with directory to be served  i.e. `mypfs upload /tmp/share`
+1. shut it down after you have exchanged files
 
 ### version history
 1. 0.9.0 first release
 1. 0.9.1 log to standard out when someone downloads or uploads a file
+1. 0.9.2 a random username is generated -- required to access the site
+
+### cool things that could be added
+1. add parameter with directory to be served  i.e. `mypfs upload /tmp/share`
+1. on the web pages, show time remaining until server shuts down
+1. instead of exiting after timeout, show a "timeout" page
+1. support https (easy with GoLang, just not sure it will be used)
+1. limit uploads to a configurable amount
+1. after startup, display HTTP URL to copy and share
