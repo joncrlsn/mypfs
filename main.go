@@ -26,8 +26,9 @@ var (
 	action         string = "help"
 	port           int    = 8080
 	timeoutMinutes int64  = 10
-	version        string = "0.9.2"
-	tokenKey       string // Required for admittance to site
+	insecure       bool   = false
+	version        string = "0.9.3"
+	secretUsername string // Required for admittance to site
 )
 
 // uploadHandler returns an HTML upload form
@@ -97,16 +98,21 @@ File uploaded successfully: %s
 }
 
 func init() {
-	rand.Seed(time.Now().UTC().UnixNano())
-	// Generate the token required to access this server via HTTP
-	tokenKey = randomString(8)
-}
-
-func main() {
 	err := myPfsCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
+
+	if insecure {
+		// skip the random username generation
+	} else {
+		// Generate the token required to access this server via HTTP
+		rand.Seed(time.Now().UTC().UnixNano())
+		secretUsername = randomString(8)
+	}
+}
+
+func main() {
 
 	var portStr = ":" + strconv.Itoa(port)
 
@@ -116,13 +122,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	log.Printf("http://<your-ip-address>:%v/\n (Enter %s for username when requested. Password is not needed) \n", port, tokenKey)
-
 	if action == "help" {
 		os.Exit(0)
 	} else if action == "version" {
 		os.Exit(0)
-	} else if action == "up" {
+	}
+
+	if action == "up" {
+		printAddressAndPort()
 		log.Printf("Allowing uploads to the current directory for %v minutes on port %v\n", timeoutMinutes, port)
 
 		// Show the upload form
@@ -131,6 +138,7 @@ func main() {
 		http.Handle("/fs-receive", errorHandler(authBasic(receiveHandler)))
 
 	} else if action == "down" {
+		printAddressAndPort()
 		log.Printf("Allowing downloads from the current directory for %v minutes on port %v\n", timeoutMinutes, port)
 
 		// Show the download page using a customized FileServer with no
@@ -138,6 +146,7 @@ func main() {
 		http.Handle("/", errorHandler(authBasic(errorableHandler(FileServer(Dir(dir), false /*addUploadHeader*/)))))
 
 	} else if action == "up/down" {
+		printAddressAndPort()
 		log.Printf("Allowing downloads from (and uploads to) the current directory for %v minutes on port %v\n", timeoutMinutes, port)
 
 		// Display the upload form
@@ -158,4 +167,12 @@ func main() {
 	}()
 
 	log.Fatal(http.ListenAndServe(portStr, nil))
+}
+
+func printAddressAndPort() {
+	if insecure {
+		log.Printf("http://<your-ip-address>:%v/\n (No secret username required)", port)
+	} else {
+		log.Printf("http://<your-ip-address>:%v/\n (Enter %s for username when requested. Ignore password) \n", port, secretUsername)
+	}
 }

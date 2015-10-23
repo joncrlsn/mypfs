@@ -52,4 +52,5 @@ func init() {
 	myPfsCmd.AddCommand(versionCmd)
 	myPfsCmd.PersistentFlags().IntVarP(&port, "port", "p", 8080, "port number to listen on")
 	myPfsCmd.PersistentFlags().Int64VarP(&timeoutMinutes, "timeout", "t", 10, "number of minutes to leave this running")
+	myPfsCmd.PersistentFlags().BoolVarP(&insecure, "insecure", "k", false, "true = do not require secret username")
 }

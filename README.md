@@ -42,7 +42,8 @@ An personal fileserver for quickly sharing files with (and receiving files from)
 ### version history
 1. 0.9.0 first release
 1. 0.9.1 log to standard out when someone downloads or uploads a file
-1. 0.9.2 a username is generated -- required to access the site (security feature)
+1. 0.9.2 a secret username is generated -- required to access the site 
+1. 0.9.3 secret username is now optional with the --insecure (-k) flag
 
 ### cool things that could be added
 1. add parameter with directory to be served  i.e. `mypfs upload /tmp/share`

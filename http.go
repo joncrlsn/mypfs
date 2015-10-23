@@ -40,11 +40,16 @@ func errorableHandler(handler http.Handler) errorHandler {
 // with another one that requires BASIC HTTP authentication
 func authBasic(handler errorHandler) errorHandler {
 	return func(w http.ResponseWriter, req *http.Request) error {
+
+		if insecure {
+			return handler(w, req)
+		}
+
 		//
 		// Ensure request has an "Authorization" header
 		// (needed for "Basic" authentication)
 		//
-		username, password, ok := req.BasicAuth()
+		username, _, ok := req.BasicAuth()
 		if !ok {
 			// Request the "Authorization" header
 			w.Header().Set("WWW-Authenticate", `Basic realm="go-example-web"`)
@@ -52,7 +57,7 @@ func authBasic(handler errorHandler) errorHandler {
 			return nil
 		}
 
-		if tokenKey != password && username != tokenKey {
+		if username != secretUsername {
 			// User authentication failed
 			w.Header().Set("WWW-Authenticate", `Basic realm="Enter token for username"`)
 			http.Error(w, "Access Denied", http.StatusUnauthorized)
