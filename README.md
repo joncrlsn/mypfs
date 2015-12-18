@@ -20,10 +20,10 @@ An personal fileserver for quickly sharing files with (and receiving files from)
 1. server will run for 10 minutes (default), then exit -- (this is a security feature which gives enough time to exchange files and yet protect you if you forget to shut it off)
 
 ### examples
-* `mypfs version`
-* `mypfs --timeout=5 --port=8888` (both upload and download)
-* `mypfs -t5 -p8888 download`
-* `mypfs upload`
+* `mypfs --timeout=5 --port=8888`  (both upload and download)
+* `mypfs -t5 -p8888 download`   (just download)
+* `mypfs upload`  (just upload)
+* `mypfs --insecure`  (wide open to anyone)
 
 ### how to install and run
 1. download executable for your platform ( [windows](https://github.com/joncrlsn/mypfs/raw/master/bin-win/mypfs.exe "Windows"), [osx](https://github.com/joncrlsn/mypfs/raw/master/bin-osx/mypfs "OSX"), [linux](https://github.com/joncrlsn/mypfs/raw/master/bin-linux/mypfs "Linux") )
