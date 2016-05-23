@@ -16,6 +16,7 @@ import (
 	"io"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
 	"os"
 	"strconv"
@@ -27,7 +28,7 @@ var (
 	port           int    = 8080
 	timeoutMinutes int64  = 10
 	insecure       bool   = false
-	version        string = "0.9.3"
+	version        string = "0.9.4"
 	secretUsername string // Required for admittance to site
 )
 
@@ -166,13 +167,37 @@ func main() {
 		os.Exit(0)
 	}()
 
-	log.Fatal(http.ListenAndServe(portStr, nil))
+	l, err := net.Listen("tcp4", portStr)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	log.Fatal(http.Serve(l, nil))
 }
 
 func printAddressAndPort() {
-	if insecure {
-		log.Printf("http://<your-ip-address>:%v/\n (No secret username required)", port)
-	} else {
-		log.Printf("http://<your-ip-address>:%v/\n (Enter %s for username when requested. Ignore password) \n", port, secretUsername)
+	addrs, err := net.InterfaceAddrs()
+
+	if err != nil {
+		log.Fatal("Error getting local address", err)
 	}
+
+	var localAddress string = "<your-local-ip-address>"
+	for _, address := range addrs {
+		// check the address type and if it is not a loopback then display it
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				localAddress = ipnet.IP.String()
+			}
+		}
+	}
+
+	fmt.Println()
+	if insecure {
+		fmt.Printf("Use this address: http://%s:%v\n (No secret username required)", localAddress, port)
+	} else {
+		fmt.Printf("Use this address: http://%s:%v\n (Enter %s for username when requested. Ignore password) \n", localAddress, port, secretUsername)
+	}
+	fmt.Println()
+
 }

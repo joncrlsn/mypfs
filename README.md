@@ -40,10 +40,11 @@ An personal fileserver for quickly sharing files with (and receiving files from)
 1. shut it down after you have exchanged files
 
 ### version history
-1. 0.9.0 first release
-1. 0.9.1 log to standard out when someone downloads or uploads a file
-1. 0.9.2 a secret username is generated -- required to access the site 
+1. 0.9.4 listens on IPV4 addresses (no IPV6... couldn't get both); startup displays URL to share
 1. 0.9.3 secret username is now optional with the --insecure (-k) flag
+1. 0.9.2 a secret username is generated -- required to access the site 
+1. 0.9.1 log to standard out when someone downloads or uploads a file
+1. 0.9.0 first release
 
 ### cool things that could be added
 1. add parameter with directory to be served  i.e. `mypfs upload /tmp/share`
@@ -51,4 +52,3 @@ An personal fileserver for quickly sharing files with (and receiving files from)
 1. instead of exiting after timeout, show a "timeout" page
 1. support https (easy with GoLang, just not sure it will be used)
 1. limit uploads to a configurable amount
-1. after startup, display HTTP URL to copy and share
