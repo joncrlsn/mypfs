@@ -10,7 +10,7 @@ An personal fileserver for quickly sharing files with (and receiving files from)
 * (I start mypfs)
 * Me: Here, open your browser to `http://<my-internal-ip-address>:8080`, enter this username when requested, and upload the file
 * (30 seconds later)
-* Sarah: Wow, that was sooo easy!
+* Sarah: That was easy.
 
 ### features
 1. mypfs provides an HTTP web interface to upload/download files to/from the current directory
